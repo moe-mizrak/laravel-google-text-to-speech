@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace VendorName\Skeleton\Tests;
+namespace MoeMizrak\LaravelGoogleTextToSpeech\Tests;
 
-use VendorName\Skeleton\Tests\TestCase;
+use MoeMizrak\LaravelGoogleTextToSpeech\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Test;
 
 final class ExampleTest extends TestCase

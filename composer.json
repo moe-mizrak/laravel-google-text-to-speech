@@ -1,18 +1,18 @@
 {
-    "name": ":vendor_slug/:package_slug",
-    "description": ":package_description",
+    "name": "moe-mizrak/laravel-google-text-to-speech",
+    "description": "Laravel package for integrating Google Cloud Text-to-Speech API",
     "keywords": [
-        ":vendor_name",
+        "Moe Mizrak",
         "laravel",
-        ":package_slug",
+        "laravel-google-text-to-speech",
         "php 8"
     ],
     "type": "package",
-    "homepage": "https://github.com/:vendor_slug/:package_slug",
+    "homepage": "https://github.com/moe-mizrak/laravel-google-text-to-speech",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name"
+            "name": "Moe Mizrak"
         }
     ],
     "require": {
@@ -26,18 +26,18 @@
     },
     "autoload": {
         "psr-4": {
-          "VendorName\\Skeleton\\": "src/"
+          "MoeMizrak\\LaravelGoogleTextToSpeech\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-          "VendorName\\Skeleton\\Tests\\": "tests/"
+          "MoeMizrak\\LaravelGoogleTextToSpeech\\Tests\\": "tests/"
         }
     },
     "extra": {
         "laravel": {
           "providers": [
-            "VendorName\\Skeleton\\SkeletonServiceProvider"
+            "MoeMizrak\\LaravelGoogleTextToSpeech\\LaravelGoogleTextToSpeechServiceProvider"
           ]
         }
     },

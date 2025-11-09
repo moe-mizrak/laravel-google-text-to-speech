@@ -1,32 +1,17 @@
-# :package_name
-:package_description
+# laravel-google-text-to-speech
+Laravel package for integrating Google Cloud Text-to-Speech API
 
 # 🚧 Under Construction 🚧
-<!--delete-->
-# Laravel Package Template
-My opinionated template for the Laravel packages
 
-(Inspired by: https://github.com/spatie/package-skeleton-laravel)
-
-## Get Started
-> Follow these steps to get started:
-> 1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this template.
-> 2. Run following script which will replace all placeholders throughout all the files. 
->   ```bash
->   php ./build.php
->   ```
->   
-> 3. That's it! Now you have a new Laravel package scaffolded and ready to be developed.
-<!--/delete-->
 ## Installation
 You can install the package via composer:
   ```bash
-  composer require :vendor_slug/:package_slug
+  composer require moe-mizrak/laravel-google-text-to-speech
   ```
 
 You can publish the config file with:
   ```bash
-  php artisan vendor:publish --tag=":package_slug"
+  php artisan vendor:publish --tag="laravel-google-text-to-speech"
   ```
 
 ## Contributing
@@ -36,7 +21,7 @@ You can publish the config file with:
 > If you find this project useful, please consider ⭐ it to show your support!
 
 ## Authors
-This project is created and maintained by [:author_name](https://github.com/:author_username).
+This project is created and maintained by [Moe Mizrak](https://github.com/moe-mizrak).
 
 ## License
 Laravel Package Template is an open-sourced software licensed under the **[MIT license](LICENSE)**.
