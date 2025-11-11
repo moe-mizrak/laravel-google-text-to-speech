@@ -1,4 +1,4 @@
-# laravel-google-text-to-speech
+# Laravel Google Cloud Text-to-Speech API Package
 Laravel package for integrating **Google Cloud Text-to-Speech API**
 
 ## Requirements
@@ -18,7 +18,7 @@ You can publish the config file with:
   ```
 
 ## Configuration
-After publishing the configuration file, you can set your Google Cloud credentials and other settings in the `config/google-text-to-speech.php` file.
+After publishing the configuration file, you can set your Google Cloud credentials and other settings in the `config/laravel-google-text-to-speech.php` file.
 
 Published config file will look like this:
 ```php
@@ -44,7 +44,7 @@ This is an example of how to use the `synthesizeText` method:
 
 ```php
 $textData = new TextData(
-    text: 'Hello, this is a test synthesis.',
+    text: 'Laplace Demon: the hypothetical entity that, with perfect knowledge of the present, could predict all future events based on causal determinism.',
     isSsml: false,
 );
 
