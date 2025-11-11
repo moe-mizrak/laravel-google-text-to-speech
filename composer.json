@@ -17,7 +17,8 @@
     ],
     "require": {
         "php": "^8.4",
-        "spatie/laravel-data": "^4.17"
+        "spatie/laravel-data": "^4.17",
+        "google/cloud-text-to-speech": "^2.6"
     },
     "require-dev": {
         "orchestra/testbench": "^9.6.1",
