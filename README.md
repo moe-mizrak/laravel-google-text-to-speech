@@ -60,10 +60,10 @@ $audioConfigData = new AudioConfigData(
 $response = GoogleTextToSpeech::synthesizeSpeech($textData, $voiceData, $audioConfigData);
 ```
 
-- `$response` will contain the synthesized audio content in **base64 format**. it can be saved as an audio file as follows:
+- `$response` will contain the synthesized audio content. it can be saved as an audio file as follows:
 
   ```php
-  file_put_contents('output.mp3', base64_decode($response));
+  file_put_contents('output.mp3', $response);
   ```
 
 > [!TIP]
