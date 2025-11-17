@@ -107,11 +107,11 @@ final readonly class TextToSpeechRequestHelper
                             'voiceName' => $voiceName,
                         ],
                     ],
+                    'languageCode' => $languageCode,
                 ],
                 'temperature' => $temperature,
                 'seed' => 12345, // Set a fixed seed for reproducibility, consistent results across voice generations
             ],
-            'languageCode' => $languageCode,
         ];
     }
 

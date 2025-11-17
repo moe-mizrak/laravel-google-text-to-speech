@@ -150,7 +150,7 @@ final class LaravelGoogleTextToSpeechTest extends TestCase
     {
         /* SETUP */
         $textData = new GeminiTextData(
-            text: 'Hello, this is a test synthesis using Gemini AI.',
+            text: 'Hello Jeniffer, this is a test synthesis using Gemini AI.',
         );
         $voiceData = new GeminiVoiceData;
         $audioConfigData = new GeminiAudioConfigData;
@@ -161,6 +161,9 @@ final class LaravelGoogleTextToSpeechTest extends TestCase
         );
         config(['laravel-google-text-to-speech.driver' => TextToSpeechDriverType::GEMINI->value]);
         config(['laravel-google-text-to-speech.api_endpoint' => 'generativelanguage.googleapis.com']);
+        config(['laravel-google-text-to-speech.gemini.api_key' => 'AIzaSyCRHiimIOdb74HGLm7MEo3_WMtPnEXxzyc']);
+        config(['laravel-google-text-to-speech.gemini.temperature' => 0.85]);
+        config(['laravel-google-text-to-speech.gemini.model' => 'gemini-2.5-flash-preview-tts']);
         $this->mockGeminiSynthesizeSpeechRequest();
 
         /* EXECUTE */
