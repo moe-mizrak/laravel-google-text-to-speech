@@ -30,6 +30,7 @@ return [
     'gemini' => [
         'api_key' => env('GOOGLE_GEMINI_API_KEY'), // Your Gemini API key
         'model' => env('GOOGLE_GEMINI_MODEL', 'gemini-2.5-flash-preview-tts'), // The Gemini model to use for Text-to-Speech synthesis.
+        'temperature' => env('GOOGLE_GEMINI_TEMPERATURE', 0.85),
     ],
 ];
 ```
