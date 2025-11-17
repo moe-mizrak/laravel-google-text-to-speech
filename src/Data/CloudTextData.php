@@ -11,7 +11,7 @@ use Spatie\LaravelData\Data;
  *
  * @see SynthesisInput for more details.
  */
-final class TextData extends Data
+final class CloudTextData extends Data
 {
     public function __construct(
         public readonly string $text,

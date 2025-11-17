@@ -12,7 +12,7 @@ use Spatie\LaravelData\Data;
  *
  * @see AudioConfig for more details.
  */
-final class AudioConfigData extends Data
+final class CloudAudioConfigData extends Data
 {
     public function __construct(
         public readonly int $audioEncoding = AudioEncoding::MP3,

@@ -67,7 +67,7 @@ $response = GoogleTextToSpeech::synthesizeSpeech($textData, $voiceData, $audioCo
   ```
 
 > [!TIP]
-> Check [`TextData`](src/Data/TextData.php), [`VoiceData`](src/Data/VoiceData.php), and [`AudioConfigData`](src/Data/AudioConfigData.php) classes for more options.
+> Check [`TextData`](src/Data/CloudTextData.php), [`VoiceData`](src/Data/CloudVoiceData.php), and [`AudioConfigData`](src/Data/CloudAudioConfigData.php) classes for more options.
 
 ### List Voices
 This is an example of how to use the `listVoices` method:

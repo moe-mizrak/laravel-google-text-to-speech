@@ -11,13 +11,13 @@ use Spatie\LaravelData\Data;
  *
  * @see VoiceSelectionParams for more details.
  */
-final class VoiceData extends Data
+final class CloudVoiceData extends Data
 {
     public function __construct(
         public readonly string $languageCode = 'en-US',
         public readonly ?string $voiceName = 'en-US-Wavenet-D',
         public readonly ?string $voiceCloningKey = null,
         public readonly ?string $modelName = null,
-        public readonly ?MultiSpeakerData $multiSpeakerData = null,
+        public readonly ?CloudMultiSpeakerData $multiSpeakerData = null,
     ) {}
 }
