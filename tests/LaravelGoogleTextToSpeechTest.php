@@ -150,7 +150,7 @@ final class LaravelGoogleTextToSpeechTest extends TestCase
     {
         /* SETUP */
         $textData = new GeminiTextData(
-            text: 'Hello Jeniffer, this is a test synthesis using Gemini AI.',
+            text: 'Hello, this is a test synthesis using Gemini AI.',
         );
         $voiceData = new GeminiVoiceData;
         $audioConfigData = new GeminiAudioConfigData;
