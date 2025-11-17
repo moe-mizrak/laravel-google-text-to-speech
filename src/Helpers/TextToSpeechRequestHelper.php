@@ -14,9 +14,11 @@ use Google\Cloud\TextToSpeech\V1\Voice;
 use Google\Cloud\TextToSpeech\V1\VoiceCloneParams;
 use Google\Cloud\TextToSpeech\V1\VoiceSelectionParams;
 use Google\Protobuf\RepeatedField;
-use MoeMizrak\LaravelGoogleTextToSpeech\Data\AudioConfigData;
-use MoeMizrak\LaravelGoogleTextToSpeech\Data\TextData;
-use MoeMizrak\LaravelGoogleTextToSpeech\Data\VoiceData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudAudioConfigData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudTextData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudVoiceData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiTextData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiVoiceData;
 
 /**
  * Helper class to prepare requests for Google Text-to-Speech API.
@@ -37,10 +39,8 @@ final readonly class TextToSpeechRequestHelper
      * Prepares the list voices request with an optional language code filter.
      *
      * @param string|null $languageCode The language code to filter voices (e.g., 'en', 'en-US' etc.). If null, all voices are returned.
-     *
-     * @return ListVoicesRequest The prepared list voices request.
      */
-    public function prepareListVoicesRequest(?string $languageCode = 'en'): ListVoicesRequest
+    public function prepareListVoicesRequest(?string $languageCode = null): ListVoicesRequest
     {
         if ($languageCode) {
             $this->listVoicesRequest->setLanguageCode($languageCode);
@@ -51,17 +51,11 @@ final readonly class TextToSpeechRequestHelper
 
     /**
      * Prepares the speech synthesis request with text input, voice, and audio configuration.
-     *
-     * @param TextData $textData The text input data for synthesis.
-     * @param VoiceData $voiceData The voice selection parameters.
-     * @param AudioConfigData $audioConfigData The audio configuration parameters.
-     *
-     * @return SynthesizeSpeechRequest The prepared speech synthesis request.
      */
-    public function prepareSpeechRequest(
-        TextData $textData,
-        VoiceData $voiceData,
-        AudioConfigData $audioConfigData,
+    public function prepareCloudRequest(
+        CloudTextData $textData,
+        CloudVoiceData $voiceData,
+        CloudAudioConfigData $audioConfigData,
     ): SynthesizeSpeechRequest {
         // Set text input
         $textInput = $this->setTextInput($textData);
@@ -82,6 +76,58 @@ final readonly class TextToSpeechRequestHelper
     }
 
     /**
+     * Prepares the Gemini text-to-speech request payload.
+     */
+    public function prepareGeminiRequest(
+        GeminiTextData $geminiTextData,
+        GeminiVoiceData $geminiVoiceData,
+    ): array {
+        $text = $geminiTextData->text;
+        $voiceName = $geminiVoiceData->voiceName;
+        $modelName = $geminiVoiceData->modelName;
+
+        return [
+            'model' => $modelName,
+            'contents' => [
+                [
+                    'parts' => [
+                        ['text' => $text],
+                    ],
+                ],
+            ],
+            'generationConfig' => [
+                'responseModalities' => ['AUDIO'],
+                'speechConfig' => [
+                    'voiceConfig' => [
+                        'prebuiltVoiceConfig' => [
+                            'voiceName' => $voiceName,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Builds the Gemini generate content URL for the specified model, url needs to be
+     */
+    public function buildGeminiGenerateContentUrl(string $model): string
+    {
+        $apiEndpoint = config('laravel-google-text-to-speech.api_endpoint', 'generativelanguage.googleapis.com');
+
+        // Normalize endpoint first
+        $apiEndpoint = rtrim($apiEndpoint, '/');
+
+        // Add scheme if missing
+        if (! str_starts_with($apiEndpoint, 'http://') &&
+            ! str_starts_with($apiEndpoint, 'https://')) {
+            $apiEndpoint = "https://{$apiEndpoint}";
+        }
+
+        return "{$apiEndpoint}/v1beta/models/{$model}:generateContent";
+    }
+
+    /**
      * Converts a RepeatedField of Voice objects to an array representation.
      *
      * @param RepeatedField $voices The RepeatedField containing Voice objects.
@@ -96,14 +142,14 @@ final readonly class TextToSpeechRequestHelper
                 'name' => $voice->getName(),
                 'language_codes' => iterator_to_array($voice->getLanguageCodes()),
                 'gender' => $voice->getSsmlGender(),
-                'natural_sample_rate_hz' => $voice->getNaturalSampleRateHertz(),
+                'natural_sample_rate_hertz' => $voice->getNaturalSampleRateHertz(),
             ];
         }
 
         return $voicesArray;
     }
 
-    private function setVoiceParams(VoiceData $voiceData): VoiceSelectionParams
+    private function setVoiceParams(CloudVoiceData $voiceData): VoiceSelectionParams
     {
         $this->voiceParams->setLanguageCode($voiceData->languageCode);
 
@@ -135,7 +181,7 @@ final readonly class TextToSpeechRequestHelper
         return $this->voiceParams;
     }
 
-    private function setTextInput(TextData $textData): SynthesisInput
+    private function setTextInput(CloudTextData $textData): SynthesisInput
     {
         $text = $textData->text;
         $textData->isSsml ? $this->input->setSsml($text) : $this->input->setText($text);
@@ -143,7 +189,7 @@ final readonly class TextToSpeechRequestHelper
         return $this->input;
     }
 
-    private function setAudioConfig(AudioConfigData $audioConfigData): AudioConfig
+    private function setAudioConfig(CloudAudioConfigData $audioConfigData): AudioConfig
     {
         $this->audioConfig->setAudioEncoding($audioConfigData->audioEncoding);
 

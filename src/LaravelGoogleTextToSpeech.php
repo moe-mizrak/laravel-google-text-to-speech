@@ -5,54 +5,39 @@ declare(strict_types=1);
 namespace MoeMizrak\LaravelGoogleTextToSpeech;
 
 use Google\ApiCore\ApiException;
-use Google\Protobuf\RepeatedField;
-use MoeMizrak\LaravelGoogleTextToSpeech\Data\AudioConfigData;
-use MoeMizrak\LaravelGoogleTextToSpeech\Data\TextData;
-use MoeMizrak\LaravelGoogleTextToSpeech\Data\VoiceData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Data\SynthesizeData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Enums\TextToSpeechDriverType;
+use RuntimeException;
 
 final readonly class LaravelGoogleTextToSpeech extends AbstractLaravelGoogleTextToSpeech
 {
     /**
      * Synthesize speech from the provided text, voice, and audio configuration data.
      *
-     * @return string The synthesized audio content in base64-encoded format.
+     * @return string The synthesized audio content in binary format.
      *
      * @throws ApiException
      */
-    public function synthesizeSpeech(
-        TextData $textData,
-        VoiceData $voiceData,
-        AudioConfigData $audioConfigData,
-    ): string {
-        // Prepare the speech synthesis request with text, voice, and audio config
-        $request = $this->requestHelper->prepareSpeechRequest($textData, $voiceData, $audioConfigData);
-
-        // Call the Google Text-to-Speech API to synthesize speech synchronously
-        $response = $this->client->synthesizeSpeech($request);
-
-        return $response->getAudioContent();
+    public function synthesizeSpeech(SynthesizeData $synthesizeData): string
+    {
+        return $this->adapter->synthesizeSpeech($synthesizeData);
     }
 
     /**
      * Lists the available voices for synthesis, filtered by language code if provided.
      *
      * @param string|null $languageCode The language code to filter voices (e.g., 'en', 'en-US' etc.). If null, all voices are returned.
-     * @param bool $asArray Whether to return the voices as an array. If false, returns as RepeatedField which is iterable Voice objects.
      *
-     * @return RepeatedField|array A list of available voices.
+     * @return array A list of available voices.
      *
      * @throws ApiException
      */
-    public function listVoices(?string $languageCode = 'en', bool $asArray = true): RepeatedField|array
+    public function listVoices(?string $languageCode = 'en'): array
     {
-        // Prepare the list voices request with optional language code filter
-        $request = $this->requestHelper->prepareListVoicesRequest($languageCode);
+        if (config('laravel-google-text-to-speech.driver') === TextToSpeechDriverType::GEMINI->value) {
+            throw new RuntimeException('Listing voices is not supported for Gemini API.');
+        }
 
-        // Call the Google Text-to-Speech API to list available voices
-        $response = $this->client->listVoices($request);
-
-        $voices = $response->getVoices();
-
-        return $asArray ? $this->requestHelper->voicesToArray($voices) : $voices;
+        return $this->adapter->listVoices($languageCode);
     }
 }

@@ -14,7 +14,7 @@ use Spatie\LaravelData\Data;
  *
  * @see MultiSpeakerVoiceConfig for more details.
  */
-final class MultiSpeakerData extends Data
+final class CloudMultiSpeakerData extends Data
 {
     public function __construct(
         public readonly ?string $firstSpeakerVoice = null,

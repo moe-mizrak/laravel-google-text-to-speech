@@ -17,7 +17,7 @@ class TestCase extends Orchestra
         parent::setUp();
 
         // Set the path to the Google TTS credentials for testing (put your test credentials json file in the tests/storage folder)
-        config(['laravel-google-text-to-speech.credentials' => __DIR__ . '/storage/google-tts-credentials.json']);
+        config(['laravel-google-text-to-speech.cloud.credentials' => __DIR__ . '/storage/google-tts-credentials.json']);
     }
 
     /**

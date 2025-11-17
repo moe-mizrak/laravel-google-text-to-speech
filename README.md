@@ -1,10 +1,9 @@
-# Laravel Google Cloud Text-to-Speech API Package
-Laravel package for integrating **Google Cloud Text-to-Speech API**
+# Laravel Gemini and Google Cloud Text-to-Speech API Package
+Laravel package for integrating **Gemini Text-to-Speech API** and **Google Cloud Text-to-Speech API**
 
 ## Requirements
 - **PHP**: 8.4 or higher
-- [Google Cloud Text-to-Speech API](https://console.cloud.google.com/apis/library/texttospeech.googleapis.com) **enabled** in your Google Cloud project.
-- [Service Account Credentials JSON](https://console.cloud.google.com/apis/api/texttospeech.googleapis.com/credentials) file with proper permissions for **Text-to-Speech API**.
+- Google Cloud account with access to **Gemini API** and/or **Cloud Text-to-Speech API**
 
 ## Installation
 You can install the package via composer:
@@ -23,51 +22,116 @@ After publishing the configuration file, you can set your Google Cloud credentia
 Published config file will look like this:
 ```php
 return [
-    'api_endpoint' => env('GOOGLE_TEXT_TO_SPEECH_API_ENDPOINT', 'texttospeech.googleapis.com'),
-    'credentials' => env('GOOGLE_TEXT_TO_SPEECH_CREDENTIALS'),
+    'driver' => env('GOOGLE_TEXT_TO_SPEECH_DRIVER', TextToSpeechDriverType::GEMINI->value), // Options: 'gemini', 'cloud'
+    'api_endpoint' => env('GOOGLE_TEXT_TO_SPEECH_API_ENDPOINT', 'generativelanguage.googleapis.com'), // For Gemini API use 'generativelanguage.googleapis.com', for Google Cloud API use 'texttospeech.googleapis.com'
+    'cloud' => [
+        'credentials' => env('GOOGLE_TEXT_TO_SPEECH_CREDENTIALS'), // The path to the Google Cloud credentials JSON file.
+    ],
+    'gemini' => [
+        'api_key' => env('GOOGLE_GEMINI_API_KEY'), // Your Gemini API key
+        'model' => env('GOOGLE_GEMINI_MODEL', 'gemini-2.5-flash-preview-tts'), // The Gemini model to use for Text-to-Speech synthesis.
+    ],
 ];
 ```
 
-- `GOOGLE_TEXT_TO_SPEECH_API_ENDPOINT`: The API endpoint for Google Cloud Text-to-Speech. Default is `texttospeech.googleapis.com`.
-- `GOOGLE_TEXT_TO_SPEECH_CREDENTIALS`: The path to your Google Cloud service account credentials JSON file.
-
 > [!NOTE]
-> Go to the [Google Cloud Console](https://console.cloud.google.com/apis/api/texttospeech.googleapis.com/credentials) to create and download your service account credentials with proper permissions for **Text-to-Speech API**.
+> If you are using **Google Cloud Text-to-Speech API**:
+> - Go to the [Google Cloud Console](https://console.cloud.google.com/apis/api/texttospeech.googleapis.com/credentials) to create and download your service account credentials with proper permissions for **Text-to-Speech API**.
+> - Save the downloaded JSON file and set its path in the config `cloud.credentials` field.
+>
+> If you are using **Gemini Text-to-Speech API**:
+> - Go to [Google Cloud Console](https://console.cloud.google.com/projectselector2/iam-admin/serviceaccounts) and select the project where Gemini API is enabled (or create a project).
+> - Create a service account with the necessary roles to access Gemini API.
+> - Add a new key on the **Keys** tab, which will be used in the config `gemini.api_key` field.
 
 ## Usage
-There are 2 methods:
-- `synthesizeText`: Synthesize speech from plain text.
-- `listVoices`: List available voices.
+There are 2 drivers for Google Text-to-Speech API:
+- `gemini`: Uses **Gemini Text-to-Speech API**.
+- `cloud`: Uses **Google Cloud Text-to-Speech API**.
+
+> Gemini Text-to-Speech API is the newer and more advanced API (premium voices), while Google Cloud Text-to-Speech API is the traditional API.
+
+> [!NOTE]
+> You can set the driver in the config file so that the package uses the desired API automatically
+> 
+> (You need to set credentials/api_key, and api_endpoint accordingly in the config file for the selected driver)
 
 ### Synthesize Text
 This is an example of how to use the `synthesizeText` method:
 
+##### For Gemini Text-to-Speech API:
+
 ```php
-$textData = new TextData(
+$textData = new GeminiTextData(
+    text: 'Laplace Demon: the hypothetical entity that, with perfect knowledge of the present, could predict all future events based on causal determinism.',
+);
+
+$voiceData = new GeminiVoiceData(
+    voiceName: 'Algieba',
+    modelName: 'gemini-2.5-flash-preview-tts',
+);
+
+$geminiSynthesizeData = new CloudSynthesizeData(
+    $textData,
+    $voiceData,
+);
+
+$response = GoogleTextToSpeech::synthesizeSpeech($geminiSynthesizeData);
+```
+
+- `$response` will contain the synthesized audio content (bytes). it can be saved as an audio file as follows:
+
+  ```php
+  file_put_contents('output.pcm', $response);
+  ```
+  
+> [!NOTE]
+> Gemini Text-to-Speech API currently supports only **.pcm** audio format.
+> 
+> After saving the output as a `.pcm` file, you can convert it to other audio formats (like `.wav` or `.mp3`) using tools like `ffmpeg`.
+> 
+> For example, to convert the `.pcm` file to `.wav`, you can use the following `ffmpeg` command:
+> ```bash
+> ffmpeg -f s16le -ar 24000 -ac 1 -i output.pcm out.wav
+> ```
+
+> [!TIP]
+> Check [`GeminiTextData`](src/Data/GeminiTextData.php), and [`CloudVoiceData`](src/Data/GeminiVoiceData.php) classes for more options.
+
+#### For Cloud Text-to-Speech API:
+
+```php
+$textData = new CloudTextData(
     text: 'Laplace Demon: the hypothetical entity that, with perfect knowledge of the present, could predict all future events based on causal determinism.',
     isSsml: false,
 );
 
-$voiceData = new VoiceData(
+$voiceData = new CloudVoiceData(
     languageCode: 'en-US',
     voiceName: 'en-US-Wavenet-D',
 );
 
-$audioConfigData = new AudioConfigData(
+$audioConfigData = new CloudAudioConfigData(
     audioEncoding: AudioEncoding::MP3,
 );
 
-$response = GoogleTextToSpeech::synthesizeSpeech($textData, $voiceData, $audioConfigData);
+$cloudSynthesizeData = new CloudSynthesizeData(
+    $textData,
+    $voiceData,
+    $audioConfigData
+);
+
+$response = GoogleTextToSpeech::synthesizeSpeech($cloudSynthesizeData);
 ```
 
-- `$response` will contain the synthesized audio content. it can be saved as an audio file as follows:
+- `$response` will contain the synthesized audio content (bytes). it can be saved as an audio file as follows:
 
   ```php
   file_put_contents('output.mp3', $response);
   ```
 
 > [!TIP]
-> Check [`TextData`](src/Data/TextData.php), [`VoiceData`](src/Data/VoiceData.php), and [`AudioConfigData`](src/Data/AudioConfigData.php) classes for more options.
+> Check [`CloudTextData`](src/Data/CloudTextData.php), [`CloudVoiceData`](src/Data/CloudVoiceData.php), and [`CloudAudioConfigData`](src/Data/CloudAudioConfigData.php) classes for more options.
 
 ### List Voices
 This is an example of how to use the `listVoices` method:
@@ -77,6 +141,9 @@ $response = GoogleTextToSpeech::listVoices(languageCode: 'en-US');
 ```
 
 - `$response` will contain a list/array of available voices for the specified language code.
+
+> [!WARNING]
+> `listVoices` method only works with **Google Cloud Text-to-Speech API**. It is not supported for **Gemini Text-to-Speech API**.
 
 ## Contributing
 
