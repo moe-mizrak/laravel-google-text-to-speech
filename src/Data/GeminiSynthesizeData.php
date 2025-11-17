@@ -12,5 +12,6 @@ final class GeminiSynthesizeData extends SynthesizeData
     public function __construct(
         public readonly GeminiTextData $geminiTextData,
         public readonly GeminiVoiceData $geminiVoiceData,
+        public readonly GeminiAudioConfigData $geminiAudioConfigData,
     ) {}
 }

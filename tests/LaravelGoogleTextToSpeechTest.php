@@ -12,6 +12,7 @@ use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudAudioConfigData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudSynthesizeData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudTextData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudVoiceData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiAudioConfigData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiSynthesizeData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiTextData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiVoiceData;
@@ -152,9 +153,11 @@ final class LaravelGoogleTextToSpeechTest extends TestCase
             text: 'Hello, this is a test synthesis using Gemini AI.',
         );
         $voiceData = new GeminiVoiceData;
+        $audioConfigData = new GeminiAudioConfigData;
         $geminiSynthesizeData = new GeminiSynthesizeData(
             $textData,
             $voiceData,
+            $audioConfigData
         );
         config(['laravel-google-text-to-speech.driver' => TextToSpeechDriverType::GEMINI->value]);
         config(['laravel-google-text-to-speech.api_endpoint' => 'generativelanguage.googleapis.com']);

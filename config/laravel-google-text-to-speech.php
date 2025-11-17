@@ -37,5 +37,11 @@ return [
          * The Gemini model to use for Text-to-Speech synthesis.
          */
         'model' => env('GOOGLE_GEMINI_MODEL', 'gemini-2.5-flash-preview-tts'),
+
+        /*
+         * The temperature setting for controlling the randomness of the generated speech output.
+         * Higher values (e.g., 0.8) make the output more random, while lower values (e.g., 0.2) make it more focused and deterministic.
+         */
+        'temperature' => env('GOOGLE_GEMINI_TEMPERATURE', 0.85),
     ],
 ];
