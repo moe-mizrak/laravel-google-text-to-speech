@@ -17,6 +17,7 @@ use Google\Protobuf\RepeatedField;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudAudioConfigData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudTextData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\CloudVoiceData;
+use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiAudioConfigData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiTextData;
 use MoeMizrak\LaravelGoogleTextToSpeech\Data\GeminiVoiceData;
 
@@ -81,10 +82,13 @@ final readonly class TextToSpeechRequestHelper
     public function prepareGeminiRequest(
         GeminiTextData $geminiTextData,
         GeminiVoiceData $geminiVoiceData,
+        GeminiAudioConfigData $geminiAudioConfigData,
     ): array {
         $text = $geminiTextData->text;
         $voiceName = $geminiVoiceData->voiceName;
         $modelName = $geminiVoiceData->modelName;
+        $languageCode = $geminiVoiceData->languageCode;
+        $temperature = $geminiAudioConfigData->temperature;
 
         return [
             'model' => $modelName,
@@ -103,7 +107,10 @@ final readonly class TextToSpeechRequestHelper
                             'voiceName' => $voiceName,
                         ],
                     ],
+                    'languageCode' => $languageCode,
                 ],
+                'temperature' => $temperature,
+                'seed' => 12345, // Set a fixed seed for reproducibility, consistent results across voice generations
             ],
         ];
     }

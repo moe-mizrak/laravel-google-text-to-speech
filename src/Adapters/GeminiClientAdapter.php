@@ -24,6 +24,7 @@ final readonly class GeminiClientAdapter implements GeminiAdapterInterface
         $payload = $this->requestHelper->prepareGeminiRequest(
             $synthesizeData->geminiTextData,
             $synthesizeData->geminiVoiceData,
+            $synthesizeData->geminiAudioConfigData,
         );
 
         $url = $this->requestHelper->buildGeminiGenerateContentUrl($synthesizeData->geminiVoiceData->modelName);

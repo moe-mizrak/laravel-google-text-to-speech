@@ -71,9 +71,12 @@ $voiceData = new GeminiVoiceData(
     modelName: 'gemini-2.5-flash-preview-tts',
 );
 
+$audioConfigData = new GeminiAudioConfigData;
+
 $geminiSynthesizeData = new CloudSynthesizeData(
     $textData,
     $voiceData,
+    $audioConfigData,
 );
 
 $response = GoogleTextToSpeech::synthesizeSpeech($geminiSynthesizeData);
@@ -89,14 +92,9 @@ $response = GoogleTextToSpeech::synthesizeSpeech($geminiSynthesizeData);
 > Gemini Text-to-Speech API currently supports only **.pcm** audio format.
 > 
 > After saving the output as a `.pcm` file, you can convert it to other audio formats (like `.wav` or `.mp3`) using tools like `ffmpeg`.
-> 
-> For example, to convert the `.pcm` file to `.wav`, you can use the following `ffmpeg` command:
-> ```bash
-> ffmpeg -f s16le -ar 24000 -ac 1 -i output.pcm out.wav
-> ```
 
 > [!TIP]
-> Check [`GeminiTextData`](src/Data/GeminiTextData.php), and [`CloudVoiceData`](src/Data/GeminiVoiceData.php) classes for more options.
+> Check [`GeminiTextData`](src/Data/GeminiTextData.php), [`GeminiAudioConfigData`](src/Data/GeminiAudioConfigData.php) and [`GeminiVoiceData`](src/Data/GeminiVoiceData.php) classes for more options.
 
 #### For Cloud Text-to-Speech API:
 

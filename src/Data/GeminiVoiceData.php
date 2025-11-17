@@ -12,6 +12,7 @@ use Spatie\LaravelData\Data;
 final class GeminiVoiceData extends Data
 {
     public function __construct(
+        public string $languageCode = 'en-US',
         public readonly string $voiceName = 'Algieba',
         public ?string $modelName = null,
     ) {
