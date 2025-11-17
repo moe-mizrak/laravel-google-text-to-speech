@@ -1,11 +1,16 @@
 {
     "name": "moe-mizrak/laravel-google-text-to-speech",
-    "description": "Laravel package for integrating Google Cloud Text-to-Speech API",
+    "description": "Laravel package for integrating Gemini Text-to-Speech API and Google Cloud Text-to-Speech API",
     "keywords": [
         "Moe Mizrak",
         "laravel",
         "laravel-google-text-to-speech",
-        "php 8"
+        "php 8",
+        "google-cloud",
+        "text-to-speech",
+        "gemini",
+        "api",
+        "ai-voice"
     ],
     "type": "package",
     "homepage": "https://github.com/moe-mizrak/laravel-google-text-to-speech",
