@@ -74,7 +74,7 @@ $voiceData = new GeminiVoiceData(
 
 $audioConfigData = new GeminiAudioConfigData;
 
-$geminiSynthesizeData = new CloudSynthesizeData(
+$geminiSynthesizeData = new GeminiSynthesizeData(
     $textData,
     $voiceData,
     $audioConfigData,
